@@ -25,7 +25,7 @@ if __name__ == "__main__":
             print(exc)
 
     # Step 1: Gather item availability information from website
-    with EcuageneraWebsite(headless=False) as ew:
+    with EcuageneraWebsite(headless=True) as ew:
         ew.open_website()
         available_items = {}
 
