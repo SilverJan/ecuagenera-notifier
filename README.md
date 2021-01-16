@@ -73,7 +73,11 @@ You can also schedule the script to run e.g. every 10 minutes by adding a cron (
 */10 * * * * DISPLAY=:0 python3 /path/to/ecuagenera_notifier.py
 ```
 
-## Option 3) Installation via Debian package
+## Option 3) Scheduled execution (via GitHub Actions)
+
+You can also schedule the script to run e.g. every 5 minutes by adding a GitHub Action. There is one configured in the `.github/workflows/` folder.
+
+## Option 4) Installation via Debian package
 
 Utilities to create a Debian package are included in the repo and can be called via:
 
