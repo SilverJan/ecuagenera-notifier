@@ -38,7 +38,9 @@ jobs:
             smtp_port: 587
             smtp_user: '$SMTP_USER'
             smtp_pw: '$SMTP_PW'
-            to_email: 'sophiahenry39@yahoo.com'
+            to_email: 
+              - 'sophiahenry39@yahoo.com'
+              - 'jan.bissinger@outlook.de'
             from_email: 'jan.bissinger@outlook.de'
             EOL
 

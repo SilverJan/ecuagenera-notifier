@@ -56,16 +56,16 @@ if __name__ == "__main__":
             mailserver.login(config['smtp_user'], config['smtp_pw'])
 
             from_email_address = config['from_email']
-            to_email_address = config['to_email']
+            to_email_addresses = config['to_email']
 
             msg = EmailMessage()
             msg.set_content(mail_body)
             msg['From'] = from_email_address
-            msg['To'] = to_email_address
+            msg['To'] = to_email_addresses
             msg['Subject'] = 'Ecuagenera Notification'
 
             mailserver.sendmail(from_addr=from_email_address,
-                                to_addrs=to_email_address, msg=msg.as_string())
+                                to_addrs=to_email_addresses, msg=msg.as_string())
         except socket.gaierror:
             print("Socket issue while sending email - Are you in VPN/proxy?")
         except Exception as e:
