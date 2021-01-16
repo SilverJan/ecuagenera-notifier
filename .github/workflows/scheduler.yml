@@ -16,5 +16,30 @@ jobs:
       - name: Install dependencies
         run: sudo apt install python3-yaml python3-selenium chromium-browser chromium-chromedriver
 
+      - name: Create config.yml
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PW: ${{ secrets.SMTP_PW }}
+        run: |
+            cat >config.yml <<EOL
+            item_ids:
+              - 18834         # Verrucosum 2
+              - PRE2244-003   # Verrucosum 5
+              - 17764         # Anthurium warocqueanum
+              - 18711         # Anthurium veitchii
+              - 152292        # Philodendron serpens
+              - 273063        # Philodendron serpens type
+              - 18806         # Philodendron esmeraldense
+              - 18807         # Philodendron gloriosum
+              - 471110        # Anthurium luxurians
+              - 472254        # Philodendron luxurians
+            smtp_server: 'smtp.office365.com'
+            smtp_port: 587
+            smtp_user: '$SMTP_USER'
+            smtp_pw: '$SMTP_PW'
+            to_email: 'sophiahenry39@yahoo.com'
+            from_email: 'jan.bissinger@outlook.de'
+            EOL
+
       - name: Run notifier script
         run: python3 src/opt/ecuagenera-notifier/ecuagenera_notifier.py
