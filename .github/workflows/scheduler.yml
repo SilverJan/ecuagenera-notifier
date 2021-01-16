@@ -2,7 +2,7 @@ name: ecuagenera-notifier
 
 on:
   schedule:
-    - cron:  '5 * * * *'
+    - cron:  '*/5 * * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
