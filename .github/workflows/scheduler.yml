@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Runs script
-      - name: Run a one-line script
+      - name: Install dependencies
+        run: sudo apt install python3-yaml python3-selenium chromium-browser chromium-chromedriver
+
+      - name: Run notifier script
         run: python3 src/opt/ecuagenera-notifier/ecuagenera_notifier.py
