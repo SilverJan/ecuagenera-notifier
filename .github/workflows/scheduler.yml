@@ -21,7 +21,7 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PW: ${{ secrets.SMTP_PW }}
         run: |
-            cat >config.yml <<EOL
+            cat >src/opt/ecuagenera-notifier/config.yml <<EOL
             item_ids:
               - 18834         # Verrucosum 2
               - PRE2244-003   # Verrucosum 5
