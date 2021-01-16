@@ -3,9 +3,8 @@ name: ecuagenera-notifier
 on:
   push:
   schedule:
-    - cron:  '*/5 * * * *'
-
-  # Allows you to run this workflow manually from the Actions tab
+    - cron:  '*/30 * * * *'
+  # to allow manual triggering via GitHub webpage
   workflow_dispatch:
 
 jobs:
@@ -34,7 +33,6 @@ jobs:
               - 18807         # Philodendron gloriosum
               - 471110        # Anthurium luxurians
               - 472254        # Philodendron luxurians
-              - PRH6726       # test
             smtp_server: 'smtp.office365.com'
             smtp_port: 587
             smtp_user: '$SMTP_USER'
