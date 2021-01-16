@@ -1,6 +1,7 @@
 name: ecuagenera-notifier
 
 on:
+  push:
   schedule:
     - cron:  '*/5 * * * *'
 
