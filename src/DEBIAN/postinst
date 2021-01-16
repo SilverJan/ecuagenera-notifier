@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+systemctl daemon-reload
+systemctl enable ecuagenera-notifier.service
+systemctl restart ecuagenera-notifier.service
+systemctl enable ecuagenera-notifier.timer
+systemctl restart ecuagenera-notifier.timer
+
+exit 0
