@@ -1,7 +1,5 @@
-import datetime
 import os
 import smtplib
-import time
 import socket
 from email.message import EmailMessage
 
@@ -66,10 +64,12 @@ if __name__ == "__main__":
 
             mailserver.sendmail(from_addr=from_email_address,
                                 to_addrs=to_email_addresses, msg=msg.as_string())
-        except socket.gaierror:
+        except socket.gaierror as e:
             print("Socket issue while sending email - Are you in VPN/proxy?")
+            raise e
         except Exception as e:
             print(f"Something went wrong while sending an email: {e}")
+            raise e
         finally:
             if mailserver != None:
                 mailserver.quit()
