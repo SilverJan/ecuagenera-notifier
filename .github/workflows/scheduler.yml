@@ -33,6 +33,8 @@ jobs:
               - 18807         # Philodendron gloriosum
               - 471110        # Anthurium luxurians
               - 472254        # Philodendron luxurians
+              - PRE11769      # Philodendron fibrosum
+              - 314077        # Philodendron nangaritense
             smtp_server: 'smtp.office365.com'
             smtp_port: 587
             smtp_user: '$SMTP_USER'
