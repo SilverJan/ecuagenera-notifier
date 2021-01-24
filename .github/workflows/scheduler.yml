@@ -26,7 +26,7 @@ jobs:
               - 18834         # Verrucosum 2
               - PRE2244-003   # Verrucosum 5
               - 17764         # Anthurium warocqueanum
-              - 18711         # Anthurium veitchii
+              - PRE2098       # Anthurium veitchii
               - 152292        # Philodendron serpens
               - 273063        # Philodendron serpens type
               - 18806         # Philodendron esmeraldense
@@ -35,6 +35,7 @@ jobs:
               - 472254        # Philodendron luxurians
               - PRE11769      # Philodendron fibrosum
               - 314077        # Philodendron nangaritense
+              - PRE7185       # Philodendron furcatum
             smtp_server: 'smtp.office365.com'
             smtp_port: 587
             smtp_user: '$SMTP_USER'
