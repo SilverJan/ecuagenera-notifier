@@ -42,8 +42,8 @@ jobs:
             smtp_pw: '$SMTP_PW'
             to_email: 
               - 'sophiahenry39@yahoo.com'
-              - 'jan.bissinger@outlook.de'
-            from_email: 'jan.bissinger@outlook.de'
+              - '$FROM_EMAIL'
+            from_email: '$FROM_EMAIL'
             EOL
 
       - name: Run notifier script
