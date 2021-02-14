@@ -20,6 +20,7 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PW: ${{ secrets.SMTP_PW }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
         run: |
             cat >src/opt/ecuagenera-notifier/config.yml <<EOL
             item_ids:
