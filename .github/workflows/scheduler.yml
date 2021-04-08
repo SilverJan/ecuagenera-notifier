@@ -2,8 +2,8 @@ name: ecuagenera-notifier
 
 on:
   push:
-#   schedule:
-#     - cron:  '*/60 * * * *'
+  schedule:
+    - cron:  '*/15 * * * *'
   # to allow manual triggering via GitHub webpage
   workflow_dispatch:
 
