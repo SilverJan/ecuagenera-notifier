@@ -5,7 +5,14 @@ Small monitoring script for the [ecuagenera.com](https://www.ecuagenera.com/) we
 The `ecuagenera_notifier.py` script does the following:
 
 * Open website
+* if do_checkout is True:
+  * Login
+  * Clear basket
 * For each configured product ID, send out email if product is available
+* if do_checkout is True:
+  * Add item to basket in desired quantity
+  * Check if any of the items has been ordered before
+  * if not, order items
 
 ## How to run it  (ad-hoc or scheduled)
 
@@ -40,15 +47,21 @@ In order to work properly, you must create a config file for your credentials.
 A file `config.yml` has to be created to read configurations. Here is an example:
 
 ```yml
-product_ids:
+item_ids:
   - 12345
   - 67890
+item_quantities: # only needed if do_checkout is True
+  - 1
+  - 5
+username: 'ecua_user@outlook.com'
+password: 'pw123'
 smtp_server: 'smtp.office365.com'
 smtp_port: 587
 smtp_user: 'test@outlook.com'
 smtp_pw: 'pw123'
 to_email: 'test2@outlook.com'
 from_email: 'test@outlook.com'
+do_checkout: True # if bot should auto checkout
 ```
 
 Store the file either
