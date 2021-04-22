@@ -2,8 +2,8 @@ name: ecuagenera-notifier
 
 on:
   push:
-  schedule:
-    - cron:  '*/15 * * * *'
+  # schedule:
+    # - cron: "*/30 * * * *"
   # to allow manual triggering via GitHub webpage
   workflow_dispatch:
 
@@ -22,18 +22,20 @@ jobs:
           SMTP_PW: ${{ secrets.SMTP_PW }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
         run: |
-            cat >src/opt/ecuagenera-notifier/config.yml <<EOL
-            item_ids:
-              - 472254        # Philodendron luxurians
-            smtp_server: 'smtp.office365.com'
-            smtp_port: 587
-            smtp_user: '$SMTP_USER'
-            smtp_pw: '$SMTP_PW'
-            to_email: 
+          cat >src/opt/ecuagenera-notifier/config.yml <<EOL
+          item_ids:
+            - 472254        # Philodendron luxurians
+          item_quantities:
+            - 3
+          smtp_server: 'smtp.office365.com'
+          smtp_port: 587
+          smtp_user: '$SMTP_USER'
+          smtp_pw: '$SMTP_PW'
+          to_email: 
               - 'sophiahenry39@yahoo.com'
               - '$FROM_EMAIL'
-            from_email: '$FROM_EMAIL'
-            EOL
+          from_email: '$FROM_EMAIL'
+          EOL
 
       - name: Run notifier script
         run: python3 src/opt/ecuagenera-notifier/ecuagenera_notifier.py
