@@ -1,11 +1,7 @@
-import datetime
-import time
-
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 
@@ -79,15 +75,21 @@ class EcuageneraWebsite:
     def clear_basket(self):
         # click on basket
         if "Basket" not in self.driver.current_url:
-            self.driver.find_element_by_class_name('basket-icon-link').click()
+            try:
+                self.driver.find_element_by_class_name(
+                    'basket-icon-link').click()
+            except NoSuchElementException:
+                print("Basket is already empty")
+                return
+
         if "Your basket is empty" in self.driver.page_source:
             print("Basket is now empty")
             return
         else:
-            self.driver.find_element_by_xpath('//*[@id="BasketTable"]/tbody/tr[1]/td[6]/button').click()
+            self.driver.find_element_by_xpath(
+                '//*[@id="BasketTable"]/tbody/tr[1]/td[6]/button').click()
             # clear until all are gone
             self.clear_basket()
-
 
     def checkout(self) -> bool:
         try:
@@ -122,7 +124,8 @@ class EcuageneraWebsite:
             WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(
                 (By.ID, 'AcceptTAC')))
             self.driver.find_element_by_id('AcceptTAC').click()
-            self.driver.find_element_by_xpath('//*[@id="BasketForm"]/div[4]/div[1]/button').click()
+            self.driver.find_element_by_xpath(
+                '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
 
             print('Successfully checked out!')
             return True
