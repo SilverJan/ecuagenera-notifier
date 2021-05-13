@@ -67,7 +67,7 @@ if __name__ == "__main__":
                 with open(ordered_items_file_path, 'r+') as stream:
                     ordered_items = stream.read()
                     for (item_id, _) in available_items.items():
-                        if item_id in ordered_items:
+                        if str(item_id) in ordered_items:
                             mail_body += f"\nItem {item_id} has already been ordered before. Not proceeding with order."
                             return
 
