@@ -41,8 +41,11 @@ if __name__ == "__main__":
 
         for i, item_id in enumerate(config['item_ids']):
             if ew.is_item_available(item_id):
+                print(f"Item {item_id} is in stock")
                 available_items[item_id] = ew.get_item_name(item_id)
                 ew.add_to_basket(quantity=config['item_quantities'][i])
+            else:
+                print(f"Item {item_id} is not in stock")
 
         if len(available_items) == 0:
             print("No item is available yet")
