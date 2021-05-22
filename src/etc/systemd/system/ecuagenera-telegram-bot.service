@@ -1,0 +1,23 @@
+[Unit]
+Description=Start ecuagenera telegram registration bot service
+
+[Service]
+# TODO: workaround for pip libraries not being available as root
+# needs to be manually installed right now via `pip3 install -r requirements.txt`
+User=pi
+ExecStart=/usr/bin/python3 /opt/ecuagenera-bot/telegram_registration_bot.py
+
+# keep process after user logs off
+RemainAfterExit=false
+
+# Do restart
+Restart=always
+RestartSec=3
+
+# Use syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=ecuagenera-telegram-bot
+
+[Install]
+WantedBy=default.target

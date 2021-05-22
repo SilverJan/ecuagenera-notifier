@@ -4,7 +4,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
+from ecua_utils.logger import Logger
 
+logger = Logger.logger
 
 class EcuageneraWebsite:
     url = "https://www.ecuagenera.com/epages/ecuagenera.sf/en_US/?ObjectPath=/Shops/ecuagenera&ViewAction=ViewMyAccount&LastViewAction=ViewMyAccount&HideNotice=1"
@@ -51,7 +53,7 @@ class EcuageneraWebsite:
         if len(self.driver.find_elements_by_class_name('ProductDetails')) > 0:
             return True
 
-        print(
+        logger.warning(
             f'item {item_id} is not available - Are you sure the ID is correct?')
         return False
 
@@ -79,11 +81,11 @@ class EcuageneraWebsite:
                 self.driver.find_element_by_class_name(
                     'basket-icon-link').click()
             except NoSuchElementException:
-                print("Basket is already empty")
+                logger.debug("Basket is already empty")
                 return
 
         if "Your basket is empty" in self.driver.page_source:
-            print("Basket is now empty")
+            logger.debug("Basket is now empty")
             return
         else:
             self.driver.find_element_by_xpath(
@@ -124,10 +126,10 @@ class EcuageneraWebsite:
             WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(
                 (By.ID, 'AcceptTAC')))
             self.driver.find_element_by_id('AcceptTAC').click()
-            self.driver.find_element_by_xpath(
-                '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
+            # self.driver.find_element_by_xpath(
+            #     '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
 
-            print('Successfully checked out!')
+            logger.info('Successfully checked out!')
             return True
         except Exception:
             return False

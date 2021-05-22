@@ -27,7 +27,7 @@ SCRIPT_PATH=$(dirname "$0")
 SCRIPT_PATH=$(cd "$SCRIPT_PATH" && pwd)
 DIST_DIR="dist"
 VERSION="$(cat VERSION)"
-NAME="ecuagenera-notifier"
+NAME="ecuagenera-bot"
 EXPERIMENTAL_SUFFIX=""
 BASE_DIR="$(pwd)"
 

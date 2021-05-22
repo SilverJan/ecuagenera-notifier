@@ -10,17 +10,17 @@ build: clean
 
 install: build
 	@echo "=====Install======"
-	sudo gdebi --non-interactive dist/ecuagenera_notifier_$(VERSION)_all.deb 
+	sudo gdebi --non-interactive dist/ecuagenera_bot_$(VERSION)_all.deb 
 
 run_test:
 	@echo "=====Test======"
-	python3 -m pytest -v test/test_ecuagenera_notifier.py
+	python3 -m pytest -v test/test_ecuagenera_bot.py
 
 clean_install: purge install
 
 purge:
 	@echo "=====Purge======"
-	sudo apt purge -y ecuagenera-notifier || true
+	sudo apt purge -y ecuagenera-bot || true
 
 clean:
 	@echo "=====Clean======"
@@ -31,17 +31,17 @@ clean:
 
 deploy: build
 	@echo "=====Deploy latest package on SSH server======"
-	scp dist/ecuagenera-notifier_$(VERSION)_all.deb $(SSH_USER)@$(SSH_HOST):/tmp/
-	ssh -t $(SSH_USER)@$(SSH_HOST) "cd /home/$(SSH_USER)/dev/ecuagenera-notifier; make purge; sudo gdebi --non-interactive /tmp/ecuagenera-notifier_$(VERSION)_all.deb"
+	scp dist/ecuagenera-bot_$(VERSION)_all.deb $(SSH_USER)@$(SSH_HOST):/tmp/
+	ssh -t $(SSH_USER)@$(SSH_HOST) "cd /home/$(SSH_USER)/dev/ecuagenera-bot; make purge; sudo gdebi --non-interactive /tmp/ecuagenera-bot_$(VERSION)_all.deb"
 
 copy_config:
 	@echo "=====Copy config from local to SSH server======"
-	scp src/opt/ecuagenera-notifier/config.yml $(SSH_USER)@$(SSH_HOST):/opt/ecuagenera-notifier/config.yml
+	scp src/opt/ecuagenera-bot/config.yml $(SSH_USER)@$(SSH_HOST):/opt/ecuagenera-bot/config.yml
 
 check_status:
 	@echo "=====Check system status on SSH server======"
-	ssh -t $(SSH_USER)@$(SSH_HOST) "systemctl status --no-pager ecuagenera-notifier.service;"
+	ssh -t $(SSH_USER)@$(SSH_HOST) "systemctl status --no-pager ecuagenera-bot.service ecuagenera-registration-monitor.service ecuagenera-telegram-bot.service; PYTHONPATH=/opt/ecuagenera-bot python3 -m ecua_helpers.get_telegram_linked_accounts"
 
 ssh:
 	@echo "=====Connect to SSH server======"
-	ssh $(SSH_USER)@$(SSH_HOST) 
+	ssh $(SSH_USER)@$(SSH_HOST)

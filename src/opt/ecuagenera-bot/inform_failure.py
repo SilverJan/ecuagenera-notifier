@@ -19,7 +19,7 @@ with open(config_file_path, 'r') as stream:
         print(exc)
 
 # get logs
-log = subprocess.check_output(["sudo", "systemctl", "status", "ecuagenera-notifier.service", "--no-pager"])
+log = subprocess.check_output(["sudo", "systemctl", "status", "ecuagenera-bot.service", "--no-pager"])
 
 # send email to admin
 mailserver = None

@@ -1,10 +1,30 @@
 #!/bin/bash
 set -e
 
+mkdir -p /var/log/ecuagenera-bot
+chmod 777 /var/log/ecuagenera-bot
+mkdir -p /opt/ecuagenera-bot
+
 systemctl daemon-reload
-systemctl enable ecuagenera-notifier.service
-systemctl restart ecuagenera-notifier.service
-systemctl enable ecuagenera-notifier.timer
-systemctl restart ecuagenera-notifier.timer
+
+# enable and restart main crawler service & timer
+systemctl enable ecuagenera-bot.service
+systemctl restart ecuagenera-bot.service
+systemctl enable ecuagenera-bot.timer
+systemctl restart ecuagenera-bot.timer
+systemctl enable ecuagenera-bot-failure@.service
+
+# enable and restart telegram bot service
+systemctl enable ecuagenera-telegram-bot.service
+systemctl restart ecuagenera-telegram-bot.service
+
+# enable and restart registration monitor service & timer
+systemctl enable ecuagenera-registration-monitor.service
+systemctl restart ecuagenera-registration-monitor.service
+systemctl enable ecuagenera-registration-monitor.timer
+systemctl restart ecuagenera-registration-monitor.timer
+
+chmod -R 777 /opt/ecuagenera-bot
+chmod -R 777 /var/log/ecuagenera-bot
 
 exit 0

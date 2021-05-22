@@ -1,0 +1,19 @@
+[Unit]
+Description=Start ecuagenera registration monitor service
+
+[Service]
+# TODO: workaround for pip libraries not being available as root
+# needs to be manually installed right now via `pip3 install -r requirements.txt`
+User=pi
+ExecStart=/usr/bin/python3 /opt/ecuagenera-bot/registration_monitor.py
+
+# keep process after user logs off
+RemainAfterExit=false
+
+# Use syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=ecuagenera-registration-monitor
+
+[Install]
+WantedBy=default.target

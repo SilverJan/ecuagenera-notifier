@@ -1,5 +1,5 @@
 [Unit]
-Description=Timer for ecuagenera notifier service
+Description=Timer for ecuagenera crawler service
 
 [Timer]
 # run every 5 minutes

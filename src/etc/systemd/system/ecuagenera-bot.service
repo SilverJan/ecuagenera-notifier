@@ -1,8 +1,8 @@
 [Unit]
-Description=Start ecuagenera notifier service
+Description=Start ecuagenera crawler service
 
 [Service]
-ExecStart=/usr/bin/python3 /opt/ecuagenera-notifier/ecuagenera_notifier.py
+ExecStart=/usr/bin/python3 /opt/ecuagenera-bot/ecuagenera_bot.py
 
 # keep process after user logs off
 RemainAfterExit=false
@@ -10,7 +10,7 @@ RemainAfterExit=false
 # Use syslog
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=ecuagenera-notifier
+SyslogIdentifier=ecuagenera-bot
 
 [Install]
 WantedBy=default.target

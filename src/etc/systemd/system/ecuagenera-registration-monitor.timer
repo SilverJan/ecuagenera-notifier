@@ -1,0 +1,11 @@
+[Unit]
+Description=Timer for ecuagenera bot registration monitor
+
+[Timer]
+# run every minute
+OnCalendar=*:0/1
+
+Persistent=true
+
+[Install]
+WantedBy=timers.target

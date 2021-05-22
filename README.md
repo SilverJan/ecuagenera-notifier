@@ -1,8 +1,8 @@
-# ecuagenera-notifier
+# ecuagenera-bot
 
 Small monitoring script for the [ecuagenera.com](https://www.ecuagenera.com/) website.
 
-The `ecuagenera_notifier.py` script does the following:
+The `ecuagenera_bot.py` script does the following:
 
 * Open website
 * if do_checkout is True:
@@ -67,14 +67,14 @@ do_checkout: True # if bot should auto checkout
 Store the file either
 
 * if ad-hoc executed: in project directory
-* if installed via Debian package: in `/opt/ecuagenera-notifier/` (hint: this has to be done after the installation of the Debian package)
+* if installed via Debian package: in `/opt/ecuagenera-bot/` (hint: this has to be done after the installation of the Debian package)
 
 ### Option 1) Ad-hoc execution
 
 After cloning and creation of the config file, the script can be easily executed by running
 
 ```bash
-python3 ecuagenera_notifier.py
+python3 ecuagenera_bot.py
 ```
 
 ## Option 2) Scheduled execution (via cron)
@@ -83,7 +83,7 @@ You can also schedule the script to run e.g. every 10 minutes by adding a cron (
 
 ```bash
 # add the following line at the end of the file
-*/10 * * * * DISPLAY=:0 python3 /path/to/ecuagenera_notifier.py
+*/10 * * * * DISPLAY=:0 python3 /path/to/ecuagenera_bot.py
 ```
 
 ## Option 3) Scheduled execution (via GitHub Actions)

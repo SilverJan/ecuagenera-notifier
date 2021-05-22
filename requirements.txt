@@ -1,2 +1,8 @@
-pyyml
+pyyaml
+pymongo
 selenium
+python-telegram-bot
+telethon
+dnspython
+python3-dateutil
+tabulate
