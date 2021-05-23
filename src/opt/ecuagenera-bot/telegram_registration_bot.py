@@ -98,15 +98,15 @@ def unlink_command(update: Update, context: CallbackContext) -> int:
 def email(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
     key = update.effective_chat.id
-    email = update.message.text
+    email = update.message.text.lower()
 
     # verify format
-    # TODO
+    # TODO improve
     if not "@" in email:
         logger.info(
             f"Entered email ({email}) is not an email address")
         update.message.reply_text(
-            "Please enter your ecuagenera.com email address")
+            "That's not a valid email address. Please type it again.")
         return EMAIL
 
     # verify if registered
@@ -117,9 +117,10 @@ def email(update: Update, context: CallbackContext) -> int:
             f"Cannot find entered email ({email}) in registered user list")
         update.message.reply_text(
             "Seems you have not registered your account yet. Please register first at: https://ecuagenera-bot.bss.design\n\n"
-            "If you have already registered via the website, please try linking (/link) again in 30 minutes."
+            "If you have already registered via the website, please try again in a few seconds."
+            "\n\nType your email address again now or /cancel.", disable_web_page_preview=True
         )
-        return ConversationHandler.END
+        return EMAIL
 
     index = registered_emails.index(email)
     logger.info(
@@ -148,7 +149,7 @@ def configure(update: Update, context: CallbackContext) -> int:
                                  callback_data=str(CONFIGURE_WISHLIST)),
         ],
         [
-            InlineKeyboardButton(text='Configure auto-checkout',
+            InlineKeyboardButton(text='Enable/disable auto-checkout',
                                  callback_data=str(CONFIGURE_AUTO_CHECKOUT)),
         ],
         [
@@ -181,35 +182,39 @@ def configure_wishlist(update: Update, context: CallbackContext) -> str:
         )
         return ConversationHandler.END
 
-    update.effective_message.reply_text('Edit your ecuagenera bot wish-list\\.\n\n'
+    update.effective_message.reply_text('Edit your ecuagenera bot wish\\-list\\.\n\n'
                                         'Syntax: `\\<item\\-id\\>\\;\\<quantity\\>`\n\n'
                                         '*Hints*:\n'
-                                        '\\- item\\-id can be retrieved from item URL on ecuagenera website\n'
-                                        '  \\- Example 1 \\(Anthurium regale\\): www\.ecuagenera\\.com\\/\\[\\.\\.\\]\\/Products\\/PIE2081 \\-\\> `PIE2081`\\)\n'
-                                        '  \\- Example 2 \\(Anthurium luxurians\\): www\.ecuagenera\\.com\\/\\[\\.\\.\\]\\/ObjectID\\=471110 \\-\\> `471110`\\)\n'
-                                        '\\- Quantity is only relevant for auto\\-checkout feature \\(premium\\)\\\n'
-                                        '\\- Quantity can be empty \\(means bot will notify only\\)\n'
-                                        '\\- Quantity can not be more than 3\n'
-                                        '\\- Wishlist can not exceed more than 3 \\(basic\\) or 6 \\(premium\\) items\n\n'
+                                        '\\- item\\-id can be retrieved from last part of the item URL on ecuagenera website\n'
+                                        '  \\- example 1 \\(Anthurium regale\\): www\.ecuagenera\\.com\\/\\[\\.\\.\\]\\/Products\\/PIE2081 \\-\\> type `PIE2081`\\)\n'
+                                        '  \\- example 2 \\(Anthurium luxurians\\): www\.ecuagenera\\.com\\/\\[\\.\\.\\]\\/ObjectID\\=471110 \\-\\> type `471110`\\)\n'
+                                        '\\- quantity is only relevant for auto\\-checkout feature \\(premium\\)\\\n'
+                                        '\\- quantity can be empty \\(means bot will notify only\\)\n'
+                                        '\\- quantity can not be more than 2\n'
+                                        '\\- wishlist can not exceed more than 3 \\(basic\\) or 5 \\(premium\\) plants\n\n'
                                         '*Example*\\:\n'
                                         '```\n'
                                         'PIE2081;1\n'
                                         '471110\n'
                                         '```\n'
-                                        'Above example would\n'
-                                        '\\- Order one Anthurium regale\n'
-                                        '\\- Notify once Anthurium luxurians is available', parse_mode="MarkdownV2", disable_web_page_preview=True)
+                                        'The above example would\n'
+                                        '\\- auto\\-checkout one Anthurium regale once available\n'
+                                        '\\- notify once Anthurium luxurians available', parse_mode="MarkdownV2", disable_web_page_preview=True)
 
     if wishlist and wishlist != "":
         update.effective_message.reply_text(
-            '*Current wish-list*:', parse_mode='MarkdownV2')
+            '*Current wish\\-list*:', parse_mode='MarkdownV2')
+        wishlist = wishlist.strip()
+        text = ''
+        for line in wishlist.splitlines():
+            text += f'`{line}`\n'
         update.effective_message.reply_text(
-            f'```{wishlist.strip()}```', parse_mode='MarkdownV2')
+            text, parse_mode='Markdown')
     else:
         update.effective_message.reply_text(
-            '*Current wish-list*:\n\empty\n', parse_mode="MarkdownV2")
+            '*Current wish\\-list*:\nna\n', parse_mode="MarkdownV2")
     update.effective_message.reply_text(
-        '\nEnter\\/Modify your wish-list now or \\/cancel\\.', parse_mode='MarkdownV2')
+        '\nEnter\\/Modify your *complete* wish\\-list now or \\/cancel\\.', parse_mode='MarkdownV2')
 
     update.callback_query.answer()
     # update.callback_query.edit_message_text(
@@ -235,14 +240,14 @@ def configure_auto_checkout(update: Update, context: CallbackContext) -> str:
         )
         return ConversationHandler.END
 
-    respond_text = ('Edit your auto\\-checkout setting \\(bot will try to checkout available plants from the wish-list\\, in the specific quantity\\)\\.\n\n'
+    respond_text = ('Edit your auto\\-checkout setting \\(bot will try to checkout available plants from the wish\\-list\\, in the specified quantity\\)\\.\n\n'
                     '*Hint: Please ensure that you have configured your billing \\& delivery address in the ecuagenera\\.com website\\.\\, else the auto\\-checkout will fail\\!*\n\n'
                     'Current setting: ')
 
     if auto_checkout:
-        respond_text += f'`A\\) Auto\\-checkout on`'
+        respond_text += f'`A\\) Auto\\-checkout enabled`'
     else:
-        respond_text += f'`B\\) Auto\\-checkout off \\(default\\)`'
+        respond_text += f'`B\\) Auto\\-checkout disabled \\(default\\)`'
 
     respond_text += "\n\nSelect your preferred option below:"
 
@@ -285,34 +290,31 @@ def update_db_auto_checkout(update: Update, context: CallbackContext) -> int:
         return ConversationHandler.END
 
     update.effective_message.reply_text(
-        'I have updated the configuration for you. Bye!', reply_markup=ReplyKeyboardRemove()
+        'I have updated the configuration for you. You can verify it in the /userinfo.', reply_markup=ReplyKeyboardRemove()
     )
 
     return ConversationHandler.END
 
 
 def update_db_wishlist(update: Update, context: CallbackContext) -> int:
-    user_input = update.message.text
+    user_input = update.message.text.replace(' ', '')
     user, email, _ = get_user_data(update, context)
 
-    user_plan = False
+    user_plan = ""
     if 'config' in user.keys():
         if Config.PLAN in user['config'].keys():
             user_plan = user['config'][Config.PLAN]
 
-    # set max quantity based on user's plan
-    max_quantity = 3
-
     # set max wish-list item based on user's plan
     if user_plan == 'basic' and len(user_input.splitlines()) > 3:
         update.effective_message.reply_text(
-            f"The basic plan only allows a maximum of 3 items in the wish-list. Reduce and try again!")
+            f"The basic plan only allows a maximum of 3 items in the wish-list. Please reduce and type again!")
         update.effective_message.reply_text(
-            f"Hint: If you switch to the premium plan (via /extendpremium) you can add up to 6 items in your wish-list.")
+            f"Hint: If you switch to the premium plan (via /extendpremium) you can add up to 5 items in your wish-list.")
         return RETURN_WISHLIST
-    elif user_plan == 'premium' and len(user_input.splitlines()) > 6:
+    elif user_plan == 'premium' and len(user_input.splitlines()) > 5:
         update.effective_message.reply_text(
-            f"You have exceeded the maximum of 6 items in the wish-list. Please reduce and try again!")
+            f"You have exceeded the maximum of 6 items in the wish-list. Please reduce and type again!")
         return RETURN_WISHLIST
 
     items_without_quantity = []
@@ -322,29 +324,34 @@ def update_db_wishlist(update: Update, context: CallbackContext) -> int:
         else:
             items_without_quantity.append(line)
 
-    for line in user_input.splitlines():
-        # check for valid format and quantity
-        if (";" in line and not re.match(r"^[a-zA-Z0-9-]{5,};[1-%s}]$" % (max_quantity), line)) or (not ";" in line and not re.match(r"^[a-zA-Z0-9-]{5,}$", line)):
-            update.effective_message.reply_text(
-                f"Invalid format or quantity for line '{line}'. Try again!")
-            return RETURN_WISHLIST
+    if user_input != 'na':
+        for line in user_input.splitlines():
+            # check for valid format and quantity
+            if (";" in line and not re.match(r"^[a-zA-Z0-9\%-]{5,};[1-2}]$", line)) or (not ";" in line and not re.match(r"^[a-zA-Z0-9\%-]{5,}$", line)):
+                update.effective_message.reply_text(
+                    f"Invalid format or quantity for line '{line}'. Type again!")
+                return RETURN_WISHLIST
 
-        # check for multiple occurrences of the same item id
-        item_id = line
-        if ';' in line:
-            item_id = line.split(';')[0]
-        if items_without_quantity.count(item_id) > 1:
-            update.effective_message.reply_text(
-                f"Item '{item_id}' is mentioned multiple times. Try again!")
-            return RETURN_WISHLIST
+            # check for multiple occurrences of the same item id
+            item_id = line
+            if ';' in line:
+                item_id = line.split(';')[0]
+            if items_without_quantity.count(item_id) > 1:
+                update.effective_message.reply_text(
+                    f"Item '{item_id}' is mentioned multiple times. Type again!")
+                return RETURN_WISHLIST
 
     logger.info(
         f'Attempting to update database entry {Config.WISHLIST} for user {email}:\n{user_input}')
     set_user_config(user, Config.WISHLIST, user_input)
 
     update.effective_message.reply_text(
-        'I have updated the configuration for you. Bye!', reply_markup=ReplyKeyboardRemove()
+        'I have updated the configuration for you. You can verify it in the /userinfo.', reply_markup=ReplyKeyboardRemove()
     )
+    if user_plan == "premium":
+        update.effective_message.reply_text(
+            'Hint: Remember to enable the auto-checkout feature, via /configure -> Enable/disable auto-checkout.', reply_markup=ReplyKeyboardRemove()
+        )
 
     return ConversationHandler.END
 
@@ -367,6 +374,7 @@ def help_command(update: Update, context: CallbackContext) -> None:
         '- /userinfo - Show information about your user (name, service expiry date, registered email, etc.)\n'
         '- /extendbasic - Extend service (basic plan)\n'
         '- /extendpremium - Extend service (premium plan)\n'
+        '- /upgrade - Upgrade from basic to premium plan (if applicable)\n'
         '- /support - Get support\n'
         '- /help - Show this help'
     )
@@ -403,7 +411,9 @@ def user_info_command(update: Update, context: CallbackContext) -> None:
         user, email, _ = get_user_data(update, context)
         try:
             actual_user_name = user['real_name']
-            actual_user_expiry_date = user['expiry_date']
+            actual_user_expiry_date = 'na'
+            if 'expiry_date' in user.keys():
+                actual_user_expiry_date = user['expiry_date']
             actual_user_registered_email = user['email']
             actual_user_plan = 'n.a.'
             actual_user_auto_checkout = False
@@ -419,12 +429,12 @@ def user_info_command(update: Update, context: CallbackContext) -> None:
             reply_text += (
                 f"This is the information I got about you:\n\n"
                 f"- Name: {actual_user_name}\n"
-                f"- Service expiry date: {actual_user_expiry_date}\n"
                 f"- Registered email: {actual_user_registered_email}\n"
                 f"- Plan: {actual_user_plan}\n"
-                f"- Auto-checkout: {actual_user_auto_checkout}\n"
+                f"- Service expiry date: {actual_user_expiry_date} (extend now via /extendbasic or /extendpremium)\n"
+                f"- Auto-checkout: {'enabled' if actual_user_auto_checkout else 'disabled'}\n"
                 f"- Wish-list:\n\n{actual_user_wishlist}\n\n"
-                "If any of the above data is wrong, please ask for /support."
+                "If any of the above data is wrong, please /configure it or ask for /support."
             )
         except ValueError:
             reply_text += ("Something is wrong the username that you entered. Please /unlink and /link again.")
@@ -454,7 +464,7 @@ def start_extension_basic_callback(update: Update, context: CallbackContext) -> 
     start_parameter = "extension-basic-payment"
     currency = "SGD"
     # price in dollars
-    price = 10
+    price = 12
     # price * 100 so as to include 2 decimal points
     prices = [LabeledPrice("1-month account extension (basic)", price * 100)]
     logger.info(f"Trying to invoice user {username} now (extension; basic)")
@@ -480,10 +490,59 @@ def start_extension_premium_callback(update: Update, context: CallbackContext) -
     start_parameter = "extension-premium-payment"
     currency = "SGD"
     # price in dollars
-    price = 20
+    price = 25
     # price * 100 so as to include 2 decimal points
     prices = [LabeledPrice("1-month account extension (premium)", price * 100)]
     logger.info(f"Trying to invoice user {username} now (extension; premium)")
+    context.bot.send_invoice(
+        chat_id, title, description, payload, provider_token, start_parameter, currency, prices
+    )
+
+def start_upgrade_callback(update: Update, context: CallbackContext) -> None:
+    key = update.effective_chat.id
+    if not key in context.user_data:
+        update.message.reply_text(
+            "You must first tell me who you are before you can upgrade your account. Do that via /link.")
+        return ConversationHandler.END
+    user, email, _ = get_user_data(update, context)
+    user_plan = ''
+    if 'config' in user.keys():
+        if Config.PLAN in user['config'].keys():
+            user_plan = user['config'][Config.PLAN]
+    
+    # check if user has basic plan
+    if user_plan != 'basic':
+        update.message.reply_text(
+            "You must be on the basic plan to be able to upgrade to premium. Consider /extendbasic or /extendpremium.")
+        return ConversationHandler.END
+
+    # check if user expiry date is > 14 days from now
+    # TODO: add fractional price depending on expiry date
+    user_expiry_date = ''
+    if 'expiry_date' in user.keys():
+        user_expiry_date = datetime.strptime(
+            user['expiry_date'], '%Y-%m-%d')
+        diff = datetime.utcnow() - user_expiry_date
+
+    if diff.days > -14:
+        update.message.reply_text(
+            "It's not possible to upgrade as your account is expiring in the next 14 days. Please switch to premium via /extendpremium.")
+        return ConversationHandler.END        
+
+    chat_id = update.message.chat_id
+    title = "Account Upgrade (Premium plan)"
+    description = f"Upgrade your ({email}) ecuagenera-bot account from basic plan to premium plan. See https://ecuagenera-bot.bss.design/pricing.html for details."
+    # select a payload just for you to recognize its the donation from your bot
+    payload = f"username: {email}; upgrade; premium"
+    provider_token = config['telegram_bot_stripe_token_test'] if is_test else config['telegram_bot_stripe_token']
+    start_parameter = "upgrade-premium-payment"
+    currency = "SGD"
+    # price in dollars
+    # TODO: make this dynamic to days left
+    price = 13
+    # price * 100 so as to include 2 decimal points
+    prices = [LabeledPrice("Upgrade account basic -> premium", price * 100)]
+    logger.info(f"Trying to upgrade user {email} now (upgrade; premium)")
     context.bot.send_invoice(
         chat_id, title, description, payload, provider_token, start_parameter, currency, prices
     )
@@ -509,12 +568,17 @@ def successful_payment_callback(update: Update, context: CallbackContext) -> Non
         payload = update.message.successful_payment.invoice_payload
         user, _, _ = get_user_data(update, context)
         new_expiry_date = datetime.today() + relativedelta(months=+1)
-        set_user_expiry_date(user, new_expiry_date.strftime("%Y-%m-%d"))
-        if "basic" in payload:
+        if "extension" in payload and "basic" in payload:
             set_user_config(user, Config.PLAN, 'basic')
             # reset settings in case user downgraded
             set_user_config(user, Config.AUTO_CHECKOUT, False)
-        elif "premium" in payload:
+            # extend account
+            set_user_expiry_date(user, new_expiry_date.strftime("%Y-%m-%d"))
+        elif "extension" in payload and "premium" in payload:
+            set_user_config(user, Config.PLAN, 'premium')
+            # extend account
+            set_user_expiry_date(user, new_expiry_date.strftime("%Y-%m-%d"))
+        elif "upgrade" in payload and "premium" in payload:
             set_user_config(user, Config.PLAN, 'premium')
         else:
             raise Exception(f"Unknown payload: {payload}")
@@ -616,6 +680,8 @@ def main() -> None:
         "extendbasic", start_extension_basic_callback))
     dispatcher.add_handler(CommandHandler(
         "extendpremium", start_extension_premium_callback))
+    dispatcher.add_handler(CommandHandler(
+        "upgrade", start_upgrade_callback))
     dispatcher.add_handler(PreCheckoutQueryHandler(precheckout_callback))
     dispatcher.add_handler(MessageHandler(
         Filters.successful_payment, successful_payment_callback))

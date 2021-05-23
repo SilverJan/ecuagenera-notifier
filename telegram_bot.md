@@ -41,6 +41,7 @@ configure - Configure settings  (e.g. wishlist, auto-checkout)
 userinfo - Show information about your user (name, service expiry date, registered email, etc.)
 extendbasic - Extend service (basic plan)
 extendpremium - Extend service (premium plan)
+upgrade - Upgrade from basic to premium plan (if applicable)
 support - Get support
 help - Show this help
 ```

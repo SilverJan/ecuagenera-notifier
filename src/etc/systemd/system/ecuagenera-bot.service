@@ -2,7 +2,8 @@
 Description=Start ecuagenera crawler service
 
 [Service]
-ExecStart=/usr/bin/python3 /opt/ecuagenera-bot/ecuagenera_bot.py
+User=pi
+ExecStart=/usr/bin/python3 /opt/ecuagenera-bot/ecuagenera_bot.py --log_level 10
 
 # keep process after user logs off
 RemainAfterExit=false

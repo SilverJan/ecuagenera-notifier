@@ -59,14 +59,10 @@ def register_user(card):
             elif key == "pw":
                 pw = val
 
-    expiry_date = datetime.today() + relativedelta(weeks=+2)
-    expiry_date = expiry_date.strftime("%Y-%m-%d")
-
     new_user = dict(
-        email=email,
+        email=email.lower(),
         pw=pw,
-        real_name=real_name,
-        expiry_date=expiry_date
+        real_name=real_name
     )
     print(f"Trying to add new user {new_user} to db")
     users_col = get_db_col()

@@ -56,7 +56,7 @@ def run_web(user):
             else:
                 logger.warning('Could not auto-checkout because user did not provide pw')
 
-        if wishlist == '':
+        if wishlist == '' or wishlist == 'na':
             logger.debug("User has no items in wishlist. Exit early")
             return
 
@@ -122,15 +122,16 @@ def run_web(user):
     # Step 2: Send email about latest updates
     if inform_user:
         # step 1: check for user expiry date and add message if account expires within 7 days
-        user_expiry_date = datetime.datetime.strptime(
-            user['expiry_date'], '%Y-%m-%d')
-        diff = datetime.datetime.utcnow() - user_expiry_date
+        if 'expiry_date' in user.keys():
+            user_expiry_date = datetime.datetime.strptime(
+                user['expiry_date'], '%Y-%m-%d')
+            diff = datetime.datetime.utcnow() - user_expiry_date
 
-        if diff.days >= -7:
-            logger.info(
-                f"Inform user {email} that expiry date is within 7 days.")
-            mail_body += f"\n\nImportant: Your account is expiring within the next 7 days (on {user_expiry_date.strftime('%Y-%m-%d')}). "
-            mail_body += "Please extend via Telegram bot (https://telegram.me/ecuagenera_bot) by typing '/extendbasic' or '/extendpremium'."
+            if diff.days >= -7:
+                logger.info(
+                    f"Inform user {email} that expiry date is within 7 days.")
+                mail_body += f"\n\nImportant: Your account is expiring within the next 7 days (on {user_expiry_date.strftime('%Y-%m-%d')}). "
+                mail_body += "Please extend via Telegram bot (https://telegram.me/ecuagenera_bot) by typing '/extendbasic' or '/extendpremium'."
 
         # step 2: send telegram message (if registered)
         if os.path.exists(config['telegram_persistence_file']):
@@ -187,6 +188,9 @@ if __name__ == "__main__":
             else:
                 continue
 
+        if 'expiry_date' not in user.keys():
+            logger.debug(f"Skip user {user['email']} as they have not paid yet")
+            continue
         user_expiry_date = datetime.datetime.strptime(
             user['expiry_date'], '%Y-%m-%d')
         diff = datetime.datetime.utcnow() - user_expiry_date
@@ -201,7 +205,7 @@ if __name__ == "__main__":
             logger.info(f"------------------------------")
             email = user['email']
             logger.info(
-                f"Running for email {email}")
+                f"Running for user {email}")
             logger.info(f"------------------------------")
             run_web(user)
 

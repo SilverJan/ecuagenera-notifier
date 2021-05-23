@@ -126,10 +126,11 @@ class EcuageneraWebsite:
             WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(
                 (By.ID, 'AcceptTAC')))
             self.driver.find_element_by_id('AcceptTAC').click()
-            # self.driver.find_element_by_xpath(
-            #     '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
+            self.driver.find_element_by_xpath(
+                '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
 
             logger.info('Successfully checked out!')
             return True
-        except Exception:
+        except Exception as e:
+            logger.error(e)
             return False
