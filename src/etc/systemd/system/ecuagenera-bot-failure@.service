@@ -3,4 +3,4 @@ Description=Send email in case the service failed
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c '/usr/bin/systemctl status %i | /usr/bin/python3 /opt/ecuagenera-botr/inform_failure.py'
+ExecStart=/bin/bash -c '/usr/bin/systemctl status %i | /usr/bin/python3 /opt/ecuagenera-bot/inform_failure.py'
