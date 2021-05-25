@@ -188,14 +188,14 @@ if __name__ == "__main__":
             else:
                 continue
 
-        if 'expiry_date' not in user.keys():
-            logger.debug(f"Skip user {user['email']} as they have not paid yet")
-            continue
-        user_expiry_date = datetime.datetime.strptime(
-            user['expiry_date'], '%Y-%m-%d')
-        diff = datetime.datetime.utcnow() - user_expiry_date
-        if diff.days < 0:
-            users.append(user)
+        # if 'expiry_date' not in user.keys():
+        #     logger.debug(f"Skip user {user['email']} as they have not paid yet")
+        #     continue
+        # user_expiry_date = datetime.datetime.strptime(
+        #     user['expiry_date'], '%Y-%m-%d')
+        # diff = datetime.datetime.utcnow() - user_expiry_date
+        # if diff.days < 0:
+        #     users.append(user)
 
     # shuffle order (to ensure everyone gets their turn)
     random.shuffle(users)
