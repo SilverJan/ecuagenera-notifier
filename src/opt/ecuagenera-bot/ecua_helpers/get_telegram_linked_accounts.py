@@ -27,7 +27,9 @@ def print_linked_accounts():
             chat = bot.getChat(k)
             for user in users:
                 if user['email'] in v[k]:
-                    expiry_date = user['expiry_date']
+                    expiry_date = "n.a"
+                    if 'expiry_date' in user.keys():
+                        expiry_date = user['expiry_date']
                     user_config = None
                     if "config" in user.keys():
                         user_config = user['config']

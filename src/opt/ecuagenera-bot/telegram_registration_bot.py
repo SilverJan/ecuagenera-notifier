@@ -169,18 +169,9 @@ def configure_wishlist(update: Update, context: CallbackContext) -> str:
     user, _, _ = get_user_data(update, context)
 
     wishlist = ""
-    user_plan = ""
     if 'config' in user.keys():
         if Config.WISHLIST in user['config'].keys():
             wishlist = user['config'][Config.WISHLIST]
-        if Config.PLAN in user['config'].keys():
-            user_plan = user['config'][Config.PLAN]
-
-    if user_plan != "basic" and user_plan != "premium":
-        update.effective_message.reply_text(
-            'Wishlist is a paid feature. Enable it via /extendbasic or /extendpremium and try again.', reply_markup=ReplyKeyboardRemove()
-        )
-        return ConversationHandler.END
 
     update.effective_message.reply_text('Edit your ecuagenera bot wish\\-list\\.\n\n'
                                         'Syntax: `\\<item\\-id\\>\\;\\<quantity\\>`\n\n'
@@ -191,7 +182,7 @@ def configure_wishlist(update: Update, context: CallbackContext) -> str:
                                         '\\- quantity is only relevant for auto\\-checkout feature \\(premium\\)\\\n'
                                         '\\- quantity can be empty \\(means bot will notify only\\)\n'
                                         '\\- quantity can not be more than 2\n'
-                                        '\\- wishlist can not exceed more than 3 \\(basic\\) or 5 \\(premium\\) plants\n\n'
+                                        '\\- wishlist can not exceed more than 1 \\(free\\) or 3 \\(basic\\) or 5 \\(premium\\) plants\n\n'
                                         '*Example*\\:\n'
                                         '```\n'
                                         'PIE2081;1\n'
@@ -300,21 +291,27 @@ def update_db_wishlist(update: Update, context: CallbackContext) -> int:
     user_input = update.message.text.replace(' ', '')
     user, email, _ = get_user_data(update, context)
 
-    user_plan = ""
+    user_plan = "free"
     if 'config' in user.keys():
         if Config.PLAN in user['config'].keys():
             user_plan = user['config'][Config.PLAN]
 
     # set max wish-list item based on user's plan
-    if user_plan == 'basic' and len(user_input.splitlines()) > 3:
+    if user_plan == 'free' and len(user_input.splitlines()) > 1:
         update.effective_message.reply_text(
-            f"The basic plan only allows a maximum of 3 items in the wish-list. Please reduce and type again!")
+            f"The free plan only allows a maximum of 1 items in the wish-list. Please reduce and type again! You can also /cancel.")
         update.effective_message.reply_text(
-            f"Hint: If you switch to the premium plan (via /extendpremium) you can add up to 5 items in your wish-list.")
+            f"Hint: If you switch to the basic / premium plan (via /extendbasic / /extendpremium) you can add up to 3 / 5 items to your wish-list.")
+        return RETURN_WISHLIST
+    elif user_plan == 'basic' and len(user_input.splitlines()) > 3:
+        update.effective_message.reply_text(
+            f"The basic plan only allows a maximum of 3 items in the wish-list. Please reduce and type again! You can also /cancel.")
+        update.effective_message.reply_text(
+            f"Hint: If you switch to the premium plan (via /extendpremium) you can add up to 5 items to your wish-list.")
         return RETURN_WISHLIST
     elif user_plan == 'premium' and len(user_input.splitlines()) > 5:
         update.effective_message.reply_text(
-            f"You have exceeded the maximum of 6 items in the wish-list. Please reduce and type again!")
+            f"You have exceeded the maximum of 5 items in the wish-list. Please reduce and type again! You can also /cancel.")
         return RETURN_WISHLIST
 
     items_without_quantity = []
@@ -415,7 +412,7 @@ def user_info_command(update: Update, context: CallbackContext) -> None:
             if 'expiry_date' in user.keys():
                 actual_user_expiry_date = user['expiry_date']
             actual_user_registered_email = user['email']
-            actual_user_plan = 'n.a.'
+            actual_user_plan = 'free'
             actual_user_auto_checkout = False
             actual_user_wishlist = ''
             if 'config' in user.keys():
@@ -498,6 +495,7 @@ def start_extension_premium_callback(update: Update, context: CallbackContext) -
         chat_id, title, description, payload, provider_token, start_parameter, currency, prices
     )
 
+
 def start_upgrade_callback(update: Update, context: CallbackContext) -> None:
     key = update.effective_chat.id
     if not key in context.user_data:
@@ -509,7 +507,7 @@ def start_upgrade_callback(update: Update, context: CallbackContext) -> None:
     if 'config' in user.keys():
         if Config.PLAN in user['config'].keys():
             user_plan = user['config'][Config.PLAN]
-    
+
     # check if user has basic plan
     if user_plan != 'basic':
         update.message.reply_text(
@@ -527,7 +525,7 @@ def start_upgrade_callback(update: Update, context: CallbackContext) -> None:
     if diff.days > -14:
         update.message.reply_text(
             "It's not possible to upgrade as your account is expiring in the next 14 days. Please switch to premium via /extendpremium.")
-        return ConversationHandler.END        
+        return ConversationHandler.END
 
     chat_id = update.message.chat_id
     title = "Account Upgrade (Premium plan)"
