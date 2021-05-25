@@ -2,8 +2,8 @@
 Description=Timer for ecuagenera crawler service
 
 [Timer]
-# run every 5 minutes
-OnCalendar=*:0/5
+# run every 30 minutes
+OnCalendar=*:0/30
 Persistent=true
 
 [Install]
