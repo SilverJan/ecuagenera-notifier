@@ -53,7 +53,7 @@ class EcuageneraWebsite:
         if len(self.driver.find_elements_by_class_name('ProductDetails')) > 0:
             return True
 
-        logger.warning(
+        print(
             f'item {item_id} is not available - Are you sure the ID is correct?')
         return False
 
@@ -81,11 +81,11 @@ class EcuageneraWebsite:
                 self.driver.find_element_by_class_name(
                     'basket-icon-link').click()
             except NoSuchElementException:
-                logger.debug("Basket is already empty")
+                print("Basket is already empty")
                 return
 
         if "Your basket is empty" in self.driver.page_source:
-            logger.debug("Basket is now empty")
+            print("Basket is now empty")
             return
         else:
             self.driver.find_element_by_xpath(
@@ -129,8 +129,8 @@ class EcuageneraWebsite:
             self.driver.find_element_by_xpath(
                 '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
 
-            logger.info('Successfully checked out!')
+            print('Successfully checked out!')
             return True
         except Exception as e:
-            logger.error(e)
+            print(e)
             return False

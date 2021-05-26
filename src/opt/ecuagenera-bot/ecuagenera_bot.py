@@ -57,7 +57,7 @@ def run_web(user, headless):
                 logger.warning('Could not auto-checkout because user did not provide pw')
 
         if wishlist == '' or wishlist == 'na':
-            logger.debug("User has no items in wishlist. Exit early")
+            print("User has no items in wishlist. Exit early")
             return
 
         available_items = {}
@@ -69,16 +69,16 @@ def run_web(user, headless):
                 item_id = wishlist_item.split(';')[0]
                 quantity = wishlist_item.split(';')[1]
             if ew.is_item_available(item_id):
-                logger.debug(f"Item {item_id} is in stock")
+                print(f"Item {item_id} is in stock")
                 available_items[item_id] = ew.get_item_name(item_id)
                 if quantity is not None:
                     available_ordered_items.append(item_id)
                     ew.add_to_basket(quantity=quantity)
             else:
-                logger.debug(f"Item {item_id} is not in stock")
+                print(f"Item {item_id} is not in stock")
 
         if len(available_items) == 0:
-            logger.debug("No item is available yet")
+            print("No item is available yet")
             return
 
         mail_body += f"The following items are now available in ecuagenera.com:\n\n"
@@ -89,7 +89,7 @@ def run_web(user, headless):
         if auto_checkout:
             if user['pw'] != '':
                 # do checkout
-                logger.debug('Trying to checkout')
+                print('Trying to checkout')
                 if ew.checkout():
                     mail_body += "\nThe following items have been checked out, but not been paid for yet:\n\n"
 
@@ -106,7 +106,7 @@ def run_web(user, headless):
                         else:
                             new_wishlist += f"{old_wishlist_line}\n"
                     new_wishlist = new_wishlist.strip()
-                    logger.info(
+                    print(
                         f'Attempting to update database entry {Config.WISHLIST} for user {email}:\n{new_wishlist}')
                     set_user_config(user, Config.WISHLIST, new_wishlist)
                     mail_body += "\nPlease proceed to pay by sending an email to the ecuagenera.com team."
@@ -118,7 +118,7 @@ def run_web(user, headless):
 
         inform_user = True
 
-    logger.debug(mail_body)
+    print(mail_body)
     # Step 2: Send email about latest updates
     if inform_user:
         # step 1: check for user expiry date and add message if account expires within 7 days
@@ -128,7 +128,7 @@ def run_web(user, headless):
             diff = datetime.datetime.utcnow() - user_expiry_date
 
             if diff.days >= -7:
-                logger.info(
+                print(
                     f"Inform user {email} that expiry date is within 7 days.")
                 mail_body += f"\n\nImportant: Your account is expiring within the next 7 days (on {user_expiry_date.strftime('%Y-%m-%d')}). "
                 mail_body += "Please extend via Telegram bot (https://telegram.me/ecuagenera_bot) by typing '/extendbasic' or '/extendpremium'."
@@ -140,13 +140,13 @@ def run_web(user, headless):
             for i, (telegram_id, dataset) in enumerate(persistence.get_user_data().items()):
                 dataset_cdc_user = dataset.get(telegram_id)
                 if dataset_cdc_user is not None and email in dataset_cdc_user:
-                    logger.debug(
+                    print(
                         f"User {email} has linked telegram account ({telegram_id})")
                     bot = Bot(config['telegram_bot_token'])
                     try:
                         bot.send_message(chat_id=telegram_id, text=mail_body)
                     except Unauthorized:
-                        logger.debug(
+                        print(
                             f"User {email} has blocked Telegram bot")
                         pass
 
@@ -189,7 +189,7 @@ if __name__ == "__main__":
                 continue
 
         # if 'expiry_date' not in user.keys():
-        #     logger.debug(f"Skip user {user['email']} as they have not paid yet")
+        #     print(f"Skip user {user['email']} as they have not paid yet")
         #     continue
         # user_expiry_date = datetime.datetime.strptime(
         #     user['expiry_date'], '%Y-%m-%d')
@@ -204,11 +204,11 @@ if __name__ == "__main__":
 
     try:
         for user in users:
-            logger.info(f"------------------------------")
+            print(f"------------------------------")
             email = user['email']
-            logger.info(
+            print(
                 f"Running for user {email}")
-            logger.info(f"------------------------------")
+            print(f"------------------------------")
             run_web(user, headless)
 
     except Exception as e:
