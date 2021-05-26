@@ -1,0 +1,34 @@
+name: ecuagenera-bot
+
+on:
+  push:
+  schedule:
+    - cron: "*/10 * * * *"
+  # to allow manual triggering via GitHub webpage
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt install python3-yaml python3-selenium chromium-browser chromium-chromedriver python3-pip
+
+      - name: Install pip packages
+        run: pip3 install pyyaml pymongo dnspython python3-dateutil python-telegram-bot
+
+      - name: Create config.yml
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PW: ${{ secrets.SMTP_PW }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+        run: |
+          cat >src/opt/ecuagenera-notifier/config.yml <<EOL
+          mongo_user: "${{ secrets.MONGO_USER }}"
+          mongo_pw: "${{ secrets.MONGO_PW }}"
+          mongo_url: "${{ secrets.MONGO_URL }}"
+          EOL
+      - name: Run notifier script
+        run: python3 src/opt/ecuagenera-bot/ecuagenera_bot.py --log_level 10 --headless
