@@ -25,7 +25,7 @@ jobs:
           SMTP_PW: ${{ secrets.SMTP_PW }}
           FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
         run: |
-          cat >src/opt/ecuagenera-notifier/config.yml <<EOL
+          cat >src/opt/ecuagenera-bot/config.yml <<EOL
           mongo_user: "${{ secrets.MONGO_USER }}"
           mongo_pw: "${{ secrets.MONGO_PW }}"
           mongo_url: "${{ secrets.MONGO_URL }}"
