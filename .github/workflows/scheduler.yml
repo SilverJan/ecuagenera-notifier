@@ -14,10 +14,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sudo apt install python3-yaml python3-selenium chromium-browser chromium-chromedriver python3-pip
+        run: sudo apt install python3-yaml python3-selenium chromium-browser chromium-chromedriver python3-pip python3-dateutil
 
       - name: Install pip packages
-        run: pip3 install pyyaml pymongo dnspython python3-dateutil python-telegram-bot
+        run: pip3 install pyyaml pymongo dnspython python-telegram-bot
 
       - name: Create config.yml
         env:
