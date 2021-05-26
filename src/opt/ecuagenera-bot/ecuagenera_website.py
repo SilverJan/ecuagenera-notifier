@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from ecua_utils.logger import Logger
+import time
 
 logger = Logger.logger
 
@@ -34,6 +35,10 @@ class EcuageneraWebsite:
 
     def open_website(self):
         self.driver.get(self.url)
+        print(self.driver.title)
+        time.sleep(5)
+        print(self.driver.title)
+        print(self.driver.get_screenshot_as_base64())
         assert "Sign in" in self.driver.title
 
     def login(self):

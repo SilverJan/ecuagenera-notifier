@@ -201,8 +201,6 @@ if __name__ == "__main__":
     # shuffle order (to ensure everyone gets their turn)
     random.shuffle(users)
 
-    print(users)
-
     try:
         for user in users:
             print(f"------------------------------")
