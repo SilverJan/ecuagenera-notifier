@@ -36,3 +36,6 @@ jobs:
 
       - name: Run notifier script
         run: python3 src/opt/ecuagenera-bot/ecuagenera_bot.py --log_level 10 --headless
+
+      - name: Show logs
+        run: cat /var/log/ecuagenera-bot/*
