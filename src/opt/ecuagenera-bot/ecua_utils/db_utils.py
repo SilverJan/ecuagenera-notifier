@@ -5,14 +5,11 @@ from .util import reload_config_yml
 # Returns `db` collection instance
 def get_db_col():
     config = reload_config_yml()
-    print(config)
     # get user list from DB
     client = pymongo.MongoClient(
         f"mongodb+srv://{config['mongo_user']}:{config['mongo_pw']}@{config['mongo_url']}")
     db = client["db"]
-    print(db.name)
     users_col = db["users"]
-    print(users_col)
     return users_col
 
 

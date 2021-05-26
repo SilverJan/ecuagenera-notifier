@@ -187,6 +187,7 @@ if __name__ == "__main__":
                 break
             else:
                 continue
+        users.append(user)
 
         # if 'expiry_date' not in user.keys():
         #     print(f"Skip user {user['email']} as they have not paid yet")
