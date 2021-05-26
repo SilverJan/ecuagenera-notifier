@@ -32,11 +32,7 @@ clean:
 deploy: build
 	@echo "=====Deploy latest package on SSH server======"
 	scp dist/ecuagenera-bot_$(VERSION)_all.deb $(SSH_USER)@$(SSH_HOST):/tmp/
-	ssh -t $(SSH_USER)@$(SSH_HOST) "cd /home/$(SSH_USER)/dev/ecuagenera-bot; make purge; sudo gdebi --non-interactive /tmp/ecuagenera-bot_$(VERSION)_all.deb"
-
-copy_config:
-	@echo "=====Copy config from local to SSH server======"
-	scp src/opt/ecuagenera-bot/config.yml $(SSH_USER)@$(SSH_HOST):/opt/ecuagenera-bot/config.yml
+	ssh -t $(SSH_USER)@$(SSH_HOST) "sudo apt purge -y ecuagenera-bot; sudo gdebi --non-interactive /tmp/ecuagenera-bot_$(VERSION)_all.deb"
 
 check_status:
 	@echo "=====Check system status on SSH server======"

@@ -3,12 +3,15 @@ Description=Start ecuagenera crawler service
 
 [Service]
 User=pi
+# start flaresolverr proxy via docker-compose
+ExecStartPre=/usr/local/bin/docker-compose -f /opt/ecuagenera-bot/docker-compose.yml up -d
 ExecStart=/usr/bin/python3 /opt/ecuagenera-bot/ecuagenera_bot.py --log_level 10
+ExecStopPost=/usr/local/bin/docker-compose -f /opt/ecuagenera-bot/docker-compose.yml down
 
 # keep process after user logs off
 RemainAfterExit=false
 
-# Use syslog
+# use syslog
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=ecuagenera-bot

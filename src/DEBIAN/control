@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Architecture: all
 Essential: no
-Depends: python3, python3-pip, python3-yaml, python3-selenium, chromium-browser, chromium-chromedriver
+Depends: python3, python3-pip, python3-yaml, python3-selenium, python3-lxml, chromium-browser, chromium-chromedriver
 Installed-Size: 1000
 Maintainer: Jan Bissinger
 Description: Small monitoring script for the ecuagenera.com website

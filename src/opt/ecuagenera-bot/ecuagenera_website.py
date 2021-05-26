@@ -35,10 +35,10 @@ class EcuageneraWebsite:
 
     def open_website(self):
         self.driver.get(self.url)
-        print(self.driver.title)
-        time.sleep(5)
-        print(self.driver.title)
-        print(self.driver.get_screenshot_as_base64())
+        # logger.debug(self.driver.title)
+        # time.sleep(5)
+        # logger.debug(self.driver.title)
+        # logger.debug(self.driver.get_screenshot_as_base64())
         assert "Sign in" in self.driver.title
 
     def login(self):
@@ -58,7 +58,7 @@ class EcuageneraWebsite:
         if len(self.driver.find_elements_by_class_name('ProductDetails')) > 0:
             return True
 
-        print(
+        logger.warning(
             f'item {item_id} is not available - Are you sure the ID is correct?')
         return False
 
@@ -86,11 +86,11 @@ class EcuageneraWebsite:
                 self.driver.find_element_by_class_name(
                     'basket-icon-link').click()
             except NoSuchElementException:
-                print("Basket is already empty")
+                logger.debug("Basket is already empty")
                 return
 
         if "Your basket is empty" in self.driver.page_source:
-            print("Basket is now empty")
+            logger.debug("Basket is now empty")
             return
         else:
             self.driver.find_element_by_xpath(
@@ -134,8 +134,8 @@ class EcuageneraWebsite:
             self.driver.find_element_by_xpath(
                 '//*[@id="BasketForm"]/div[4]/div[1]/button').click()
 
-            print('Successfully checked out!')
+            logger.info('Successfully checked out!')
             return True
         except Exception as e:
-            print(e)
+            logger.error(e)
             return False
