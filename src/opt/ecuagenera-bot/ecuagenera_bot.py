@@ -27,12 +27,12 @@ def inform_user_if_item_available(cdc_obj, user: dict):
     send_email = False
 
 
-def run_web(user):
+def run_web(user, headless):
     inform_user = False
     mail_body = ''
 
     # Step 1: Gather item availability information from website
-    with EcuageneraWebsite(username=user['email'], password=user['pw'], headless=True) as ew:
+    with EcuageneraWebsite(username=user['email'], password=user['pw'], headless=headless) as ew:
         ew.open_website()
 
         # get some config data
@@ -200,6 +200,8 @@ if __name__ == "__main__":
     # shuffle order (to ensure everyone gets their turn)
     random.shuffle(users)
 
+    print("test")
+
     try:
         for user in users:
             logger.info(f"------------------------------")
@@ -207,9 +209,10 @@ if __name__ == "__main__":
             logger.info(
                 f"Running for user {email}")
             logger.info(f"------------------------------")
-            run_web(user)
+            run_web(user, headless)
 
     except Exception as e:
+        print(e)
         logger.error(e)
         logger.error(traceback.format_exc())
         sys.exit(1)
